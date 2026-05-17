@@ -75,7 +75,7 @@ async def show_help_page1(client, callback_query: CallbackQuery):
         reply_markup=help_pannel_page1(_, START=True)
     )
 
-@app.on_callback_query(filters.regex("fork_repo"))
+@app.on_callback_query(filters.regex("fork_repooooooooooo"))
 async def fork_repo_callback(client, query):
     await query.message.edit_text(
         text=(
