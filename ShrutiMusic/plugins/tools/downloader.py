@@ -97,4 +97,4 @@ async def send_repo(_, message: Message):
 
 @app.on_callback_query(filters.regex("tap_button"))
 async def tap_button_callback(_, query: CallbackQuery):
-    await query.answer("Bruh 😮‍💨", show_alert=True)
+    await query.answer("FUCK U 😮‍💨", show_alert=True)
