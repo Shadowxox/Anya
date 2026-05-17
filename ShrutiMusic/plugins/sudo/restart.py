@@ -1,25 +1,3 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
-
 import asyncio
 import os
 import shutil
@@ -49,101 +27,258 @@ async def is_heroku():
     return "heroku" in socket.getfqdn()
 
 
+
 @app.on_message(filters.command(["getlog", "logs", "getlogs"]) & SUDOERS)
 @language
 async def log_(client, message, _):
+
+    lol = await message.reply_text(
+        "<b>╭────────────────╮\n"
+        "│ 📂 ᴄʜᴇᴄᴋɪɴɢ ʟᴏɢs...\n"
+        "╰────────────────╯</b>"
+    )
+
+    animation = [
+        "▰▱▱▱▱▱▱▱▱▱",
+        "▰▰▱▱▱▱▱▱▱▱",
+        "▰▰▰▱▱▱▱▱▱▱",
+        "▰▰▰▰▱▱▱▱▱▱",
+        "▰▰▰▰▰▱▱▱▱▱",
+        "▰▰▰▰▰▰▱▱▱▱",
+        "▰▰▰▰▰▰▰▱▱▱",
+        "▰▰▰▰▰▰▰▰▱▱",
+        "▰▰▰▰▰▰▰▰▰▱",
+        "▰▰▰▰▰▰▰▰▰▰",
+    ]
+
+    for i in animation:
+        await lol.edit_text(
+            f"<b>📤 ᴜᴘʟᴏᴀᴅɪɴɢ ʟᴏɢ ғɪʟᴇ...</b>\n\n<code>{i}</code>"
+        )
+        await asyncio.sleep(0.3)
+
     try:
-        await message.reply_document(document="log.txt")
+        await message.reply_document(
+            document="log.txt",
+            caption=(
+                "<b>✨ ʜᴇʀᴇ ᴀʀᴇ ʏᴏᴜʀ ʙᴏᴛ ʟᴏɢs ✨</b>\n\n"
+                "📂 ᴜsᴇ ᴛʜᴇᴍ ᴛᴏ ꜰɪx ᴇʀʀᴏʀs & ᴄʀᴀsʜᴇs."
+            )
+        )
+
+        await lol.delete()
+
     except:
-        await message.reply_text(_["server_1"])
+        await lol.edit_text(
+            "<b>❌ ɴᴏ ʟᴏɢ ꜰɪʟᴇ ꜰᴏᴜɴᴅ.</b>"
+        )
+
 
 
 @app.on_message(filters.command(["update", "gitpull"]) & SUDOERS)
 @language
 async def update_(client, message, _):
+
     if await is_heroku():
         if HAPP is None:
-            return await message.reply_text(_["server_2"])
-    response = await message.reply_text(_["server_3"])
-    try:
-        repo = Repo()
-    except GitCommandError:
-        return await response.edit(_["server_4"])
-    except InvalidGitRepositoryError:
-        return await response.edit(_["server_5"])
-    to_exc = f"git fetch origin {config.UPSTREAM_BRANCH} &> /dev/null"
-    os.system(to_exc)
-    await asyncio.sleep(7)
-    verification = ""
-    REPO_ = repo.remotes.origin.url.split(".git")[0]
-    for checks in repo.iter_commits(f"HEAD..origin/{config.UPSTREAM_BRANCH}"):
-        verification = str(checks.count())
-    if verification == "":
-        return await response.edit(_["server_6"])
-    updates = ""
-    ordinal = lambda format: "%d%s" % (
-        format,
-        "tsnrhtdd"[(format // 10 % 10 != 1) * (format % 10 < 4) * format % 10 :: 4],
+            return await message.reply_text(
+                "<b>❌ ʜᴇʀᴏᴋᴜ ᴀᴘᴘ ɴᴏᴛ ᴄᴏɴꜰɪɢᴜʀᴇᴅ.</b>"
+            )
+
+    response = await message.reply_text(
+        "<b>╭──────────────────╮\n"
+        "│ ⚡ sᴛᴀʀᴛɪɴɢ ɢɪᴛᴘᴜʟʟ...\n"
+        "╰──────────────────╯</b>"
     )
-    for info in repo.iter_commits(f"HEAD..origin/{config.UPSTREAM_BRANCH}"):
-        updates += f"<b>➣ #{info.count()}: <a href={REPO_}/commit/{info}>{info.summary}</a> ʙʏ -> {info.author}</b>\n\t\t\t\t<b>➥ ᴄᴏᴍᴍɪᴛᴇᴅ ᴏɴ :</b> {ordinal(int(datetime.fromtimestamp(info.committed_date).strftime('%d')))} {datetime.fromtimestamp(info.committed_date).strftime('%b')}, {datetime.fromtimestamp(info.committed_date).strftime('%Y')}\n\n"
-    _update_response_ = "<b>ᴀ ɴᴇᴡ ᴜᴩᴅᴀᴛᴇ ɪs ᴀᴠᴀɪʟᴀʙʟᴇ ғᴏʀ ᴛʜᴇ ʙᴏᴛ !</b>\n\n➣ ᴩᴜsʜɪɴɢ ᴜᴩᴅᴀᴛᴇs ɴᴏᴡ\n\n<b><u>ᴜᴩᴅᴀᴛᴇs:</u></b>\n\n"
-    _final_updates_ = _update_response_ + updates
-    if len(_final_updates_) > 4096:
-        url = await NandBin(updates)
-        nrs = await response.edit(
-            f"<b>ᴀ ɴᴇᴡ ᴜᴩᴅᴀᴛᴇ ɪs ᴀᴠᴀɪʟᴀʙʟᴇ ғᴏʀ ᴛʜᴇ ʙᴏᴛ !</b>\n\n➣ ᴩᴜsʜɪɴɢ ᴜᴩᴅᴀᴛᴇs ɴᴏᴡ\n\n<u><b>ᴜᴩᴅᴀᴛᴇs :</b></u>\n\n<a href={url}>ᴄʜᴇᴄᴋ ᴜᴩᴅᴀᴛᴇs</a>"
-        )
-    else:
-        nrs = await response.edit(_final_updates_, disable_web_page_preview=True)
-    os.system("git stash &> /dev/null && git pull")
+
+    loading_frames = [
+        "◍━━━━━━━",
+        "◍◍━━━━━━",
+        "◍◍◍━━━━━",
+        "◍◍◍◍━━━━",
+        "◍◍◍◍◍━━━",
+        "◍◍◍◍◍◍━━",
+        "◍◍◍◍◍◍◍━",
+        "◍◍◍◍◍◍◍◍",
+    ]
+
+    loading_texts = [
+        "🔍 ᴄʜᴇᴄᴋɪɴɢ ꜰᴏʀ ᴜᴘᴅᴀᴛᴇs...",
+        "📡 ᴄᴏɴɴᴇᴄᴛɪɴɢ ᴛᴏ ɢɪᴛʜᴜʙ...",
+        "⚙️ ꜰᴇᴛᴄʜɪɴɢ ʟᴀᴛᴇsᴛ ᴄᴏᴍᴍɪᴛs...",
+        "🚀 ᴘʀᴇᴘᴀʀɪɴɢ ᴜᴘᴅᴀᴛᴇ...",
+    ]
+
+    for txt in loading_texts:
+        for frame in loading_frames:
+            await response.edit_text(
+                f"<b>{txt}</b>\n\n<code>{frame}</code>"
+            )
+            await asyncio.sleep(0.2)
 
     try:
+        repo = Repo()
+
+    except GitCommandError:
+        return await response.edit(
+            "<b>❌ ɢɪᴛ ᴇʀʀᴏʀ.</b>"
+        )
+
+    except InvalidGitRepositoryError:
+        return await response.edit(
+            "<b>❌ ɪɴᴠᴀʟɪᴅ ɢɪᴛ ʀᴇᴘᴏ.</b>"
+        )
+
+    os.system(f"git fetch origin {config.UPSTREAM_BRANCH} &> /dev/null")
+
+    verification = ""
+
+    REPO_ = repo.remotes.origin.url.split(".git")[0]
+
+    for checks in repo.iter_commits(
+        f"HEAD..origin/{config.UPSTREAM_BRANCH}"
+    ):
+        verification = str(checks.count())
+
+    if verification == "":
+        return await response.edit(
+            "<b>✅ ʙᴏᴛ ɪs ᴀʟʀᴇᴀᴅʏ ᴜᴘ ᴛᴏ ᴅᴀᴛᴇ.</b>"
+        )
+
+    updates = ""
+
+    for info in repo.iter_commits(
+        f"HEAD..origin/{config.UPSTREAM_BRANCH}"
+    ):
+
+        updates += (
+            f"➣ <b>{info.summary}</b>\n"
+            f"👤 {info.author}\n"
+            f"🕒 "
+            f"{datetime.fromtimestamp(info.committed_date).strftime('%d %b %Y')}\n\n"
+        )
+
+    if len(updates) > 3500:
+
+        url = await NandBin(updates)
+
+        await response.edit_text(
+            "<b>⚡ ɴᴇᴡ ᴜᴘᴅᴀᴛᴇ ꜰᴏᴜɴᴅ ⚡</b>\n\n"
+            f"📜 <a href={url}>ᴄʜᴇᴄᴋ ᴄʜᴀɴɢᴇʟᴏɢ</a>"
+        )
+
+    else:
+
+        await response.edit_text(
+            "<b>⚡ ɴᴇᴡ ᴜᴘᴅᴀᴛᴇ ꜰᴏᴜɴᴅ ⚡</b>\n\n"
+            "<b>📜 ᴄʜᴀɴɢᴇʟᴏɢ :</b>\n\n"
+            f"{updates}",
+            disable_web_page_preview=True,
+        )
+
+    await asyncio.sleep(3)
+
+    await response.edit_text(
+        "<b>⬇️ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴜᴘᴅᴀᴛᴇs...</b>"
+    )
+
+    os.system("git stash &> /dev/null && git pull")
+
+    await asyncio.sleep(2)
+
+    try:
+
         served_chats = await get_active_chats()
+
         for x in served_chats:
             try:
                 await app.send_message(
                     chat_id=int(x),
-                    text=_["server_8"].format(app.mention),
+                    text=(
+                        f"{app.mention} "
+                        "ɪs ᴜᴘᴅᴀᴛɪɴɢ...\n\n"
+                        "⏳ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ 10-15 sᴇᴄᴏɴᴅs."
+                    ),
                 )
+
                 await remove_active_chat(x)
                 await remove_active_video_chat(x)
+
             except:
                 pass
-        await response.edit(f"{nrs.text}\n\n{_['server_7']}")
+
     except:
         pass
 
+    await response.edit_text(
+        "<b>📦 ɪɴsᴛᴀʟʟɪɴɢ ɴᴇᴡ ᴘᴀᴄᴋᴀɢᴇs...</b>"
+    )
+
+    os.system("pip3 install -r requirements.txt")
+
+    await asyncio.sleep(2)
+
+    await response.edit_text(
+        "<b>🚀 ʀᴇsᴛᴀʀᴛɪɴɢ ʙᴏᴛ...</b>\n\n"
+        "⏳ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ 10-15 sᴇᴄᴏɴᴅs."
+    )
+
     if await is_heroku():
+
         try:
             os.system(
-                f"{XCB[5]} {XCB[7]} {XCB[9]}{XCB[4]}{XCB[0]*2}{XCB[6]}{XCB[4]}{XCB[8]}{XCB[1]}{XCB[5]}{XCB[2]}{XCB[6]}{XCB[2]}{XCB[3]}{XCB[0]}{XCB[10]}{XCB[2]}{XCB[5]} {XCB[11]}{XCB[4]}{XCB[12]}"
+                f"{XCB[5]} {XCB[7]} {XCB[9]}{XCB[4]}"
+                f"{XCB[0]*2}{XCB[6]}{XCB[4]}"
+                f"{XCB[8]}{XCB[1]}{XCB[5]}"
+                f"{XCB[2]}{XCB[6]}{XCB[2]}"
+                f"{XCB[3]}{XCB[0]}{XCB[10]}"
+                f"{XCB[2]}{XCB[5]} "
+                f"{XCB[11]}{XCB[4]}{XCB[12]}"
             )
             return
+
         except Exception as err:
-            await response.edit(f"{nrs.text}\n\n{_['server_9']}")
+
+            await response.edit_text(
+                f"<b>❌ ʜᴇʀᴏᴋᴜ ʀᴇsᴛᴀʀᴛ ꜰᴀɪʟᴇᴅ.</b>\n\n<code>{err}</code>"
+            )
+
             return await app.send_message(
                 chat_id=config.LOG_GROUP_ID,
-                text=_["server_10"].format(err),
+                text=f"🚨 ᴜᴘᴅᴀᴛᴇ ᴇʀʀᴏʀ :\n{err}",
             )
+
     else:
-        os.system("pip3 install -r requirements.txt")
+
         os.system(f"kill -9 {os.getpid()} && bash start")
         exit()
 
 
+
 @app.on_message(filters.command(["restart"]) & SUDOERS)
 async def restart_(_, message):
-    response = await message.reply_text("ʀᴇsᴛᴀʀᴛɪɴɢ...")
+
+    response = await message.reply_text(
+        "<b>🔄 ʀᴇsᴛᴀʀᴛɪɴɢ ʙᴏᴛ...</b>"
+    )
+
     ac_chats = await get_active_chats()
+
     for x in ac_chats:
+
         try:
             await app.send_message(
                 chat_id=int(x),
-                text=f"{app.mention} ɪs ʀᴇsᴛᴀʀᴛɪɴɢ...\n\nʏᴏᴜ ᴄᴀɴ sᴛᴀʀᴛ ᴩʟᴀʏɪɴɢ ᴀɢᴀɪɴ ᴀғᴛᴇʀ 15-20 sᴇᴄᴏɴᴅs.",
+                text=(
+                    f"{app.mention} "
+                    "ɪs ʀᴇsᴛᴀʀᴛɪɴɢ...\n\n"
+                    "⏳ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ 10-15 sᴇᴄᴏɴᴅs."
+                ),
             )
+
             await remove_active_chat(x)
             await remove_active_video_chat(x)
+
         except:
             pass
 
@@ -151,21 +286,13 @@ async def restart_(_, message):
         shutil.rmtree("downloads")
         shutil.rmtree("raw_files")
         shutil.rmtree("cache")
+
     except:
         pass
+
     await response.edit_text(
-        "» ʀᴇsᴛᴀʀᴛ ᴘʀᴏᴄᴇss sᴛᴀʀᴛᴇᴅ, ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ғᴏʀ ғᴇᴡ sᴇᴄᴏɴᴅs ᴜɴᴛɪʟ ᴛʜᴇ ʙᴏᴛ sᴛᴀʀᴛs..."
+        "<b>🚀 ʀᴇsᴛᴀʀᴛ ᴘʀᴏᴄᴇss sᴛᴀʀᴛᴇᴅ...</b>\n\n"
+        "⏳ ᴡᴀɪᴛ ꜰᴏʀ 10-15 sᴇᴄᴏɴᴅs."
     )
+
     os.system(f"kill -9 {os.getpid()} && bash start")
-
-
-# ©️ Copyright Reserved - @NoxxOP  Nand Yaduwanshi
-
-# ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @NoxxOP)
-# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
-# 📢 Telegram Channel : https://t.me/ShrutiBots
-# ===========================================
-
-
-# ❤️ Love From ShrutiBots 
