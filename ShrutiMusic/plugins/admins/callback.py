@@ -105,36 +105,21 @@ from pyrogram.types import InlineKeyboardMarkup
 from ShrutiMusic.utils.inline.start import about_panel
 from strings import get_string
 from config import BANNED_USERS
-
-
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup
-from ShrutiMusic.utils.inline.start import owner_panel  # Import owner_panel function
-from strings import get_string
-from config import BANNED_USERS
 from ShrutiMusic import app
+
 
 @app.on_callback_query(filters.regex("about_page") & ~BANNED_USERS)
 async def about_cb(client, callback_query):
     try:
         lang = "en"
         _ = get_string(lang)
+
         await callback_query.answer()
+
         await callback_query.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(about_panel(_))
         )
-    except Exception as e:
-        await callback_query.answer(f"❌ Error: {e}", show_alert=True)
 
-@app.on_callback_query(filters.regex("owner_page") & ~BANNED_USERS)
-async def owner_page_cb(client, callback_query):
-    try:
-        lang = "en"
-        _ = get_string(lang)
-        await callback_query.answer()
-        await callback_query.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(owner_panel(_))
-        )
     except Exception as e:
         await callback_query.answer(f"❌ Error: {e}", show_alert=True)
 
