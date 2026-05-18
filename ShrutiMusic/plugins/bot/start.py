@@ -2,7 +2,13 @@ import time
 
 from pyrogram import filters
 from pyrogram.enums import ChatType
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+    ReactionEmoji,
+)
+
 from py_yt import VideosSearch
 
 import config
@@ -17,18 +23,38 @@ from ShrutiMusic.utils.database import (
     is_banned_user,
     is_on_off,
 )
+
 from ShrutiMusic.utils import bot_sys_stats
 from ShrutiMusic.utils.decorators.language import LanguageStart
 from ShrutiMusic.utils.formatters import get_readable_time
-from ShrutiMusic.utils.inline import help_pannel_page1, private_panel, start_panel
+from ShrutiMusic.utils.inline import (
+    help_pannel_page1,
+    private_panel,
+    start_panel,
+)
+
 from config import BANNED_USERS
 from strings import get_string
+
+
+EFFECT_ID = 5104841245755180586
 
 
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
+
     await add_served_user(message.from_user.id)
+
+    try:
+        await message.react(
+            ReactionEmoji(
+                emoji="⚡"
+            ),
+            big=True
+        )
+    except:
+        pass
 
     if len(message.text.split()) > 1:
 
@@ -44,7 +70,8 @@ async def start_pm(client, message: Message, _):
                     caption=_["help_1"].format(config.SUPPORT_GROUP),
                     reply_markup=keyboard,
                     supports_streaming=True,
-                    message_effect_id=5159385139981059251,
+                    has_spoiler=True,
+                    message_effect_id=EFFECT_ID,
                 )
 
             except:
@@ -53,17 +80,22 @@ async def start_pm(client, message: Message, _):
                     caption=_["help_1"].format(config.SUPPORT_GROUP),
                     reply_markup=keyboard,
                     supports_streaming=True,
+                    has_spoiler=True,
                 )
 
         if name[0:3] == "sud":
 
-            await sudoers_list(client=client, message=message, _=_)
+            await sudoers_list(
+                client=client,
+                message=message,
+                _=_
+            )
 
             if await is_on_off(2):
 
                 return await app.send_message(
                     chat_id=config.LOG_GROUP_ID,
-                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>sᴜᴅᴏʟɪsᴛ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
+                    text=f"{message.from_user.mention} started the bot to check sudo list.",
                 )
 
             return
@@ -73,15 +105,19 @@ async def start_pm(client, message: Message, _):
             m = await message.reply_text("🔎")
 
             query = (str(name)).replace("info_", "", 1)
+
             query = f"https://www.youtube.com/watch?v={query}"
 
-            results = VideosSearch(query, limit=1)
+            results = VideosSearch(
+                query,
+                limit=1
+            )
 
             for result in (await results.next())["result"]:
+
                 title = result["title"]
                 duration = result["duration"]
                 views = result["viewCount"]["short"]
-                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
                 channellink = result["channel"]["link"]
                 channel = result["channel"]["name"]
                 link = result["link"]
@@ -104,6 +140,7 @@ async def start_pm(client, message: Message, _):
                             text=_["S_B_8"],
                             url=link
                         ),
+
                         InlineKeyboardButton(
                             text=_["S_B_9"],
                             url=config.SUPPORT_GROUP
@@ -121,7 +158,8 @@ async def start_pm(client, message: Message, _):
                     caption=searched_text,
                     reply_markup=key,
                     supports_streaming=True,
-                    message_effect_id=5159385139981059251,
+                    has_spoiler=True,
+                    message_effect_id=EFFECT_ID,
                 )
 
             except:
@@ -131,14 +169,10 @@ async def start_pm(client, message: Message, _):
                     caption=searched_text,
                     reply_markup=key,
                     supports_streaming=True,
+                    has_spoiler=True,
                 )
 
-            if await is_on_off(2):
-
-                return await app.send_message(
-                    chat_id=config.LOG_GROUP_ID,
-                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>ᴛʀᴀᴄᴋ ɪɴғᴏʀᴍᴀᴛɪᴏɴ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
-                )
+            return
 
         if name == "start":
 
@@ -159,7 +193,8 @@ async def start_pm(client, message: Message, _):
                     ),
                     reply_markup=InlineKeyboardMarkup(out),
                     supports_streaming=True,
-                    message_effect_id=5159385139981059251,
+                    has_spoiler=True,
+                    message_effect_id=EFFECT_ID,
                 )
 
             except:
@@ -175,14 +210,10 @@ async def start_pm(client, message: Message, _):
                     ),
                     reply_markup=InlineKeyboardMarkup(out),
                     supports_streaming=True,
+                    has_spoiler=True,
                 )
 
-            if await is_on_off(2):
-
-                return await app.send_message(
-                    chat_id=config.LOG_GROUP_ID,
-                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
-                )
+            return
 
     else:
 
@@ -203,7 +234,8 @@ async def start_pm(client, message: Message, _):
                 ),
                 reply_markup=InlineKeyboardMarkup(out),
                 supports_streaming=True,
-                message_effect_id=5159385139981059251,
+                has_spoiler=True,
+                message_effect_id=EFFECT_ID,
             )
 
         except:
@@ -219,19 +251,25 @@ async def start_pm(client, message: Message, _):
                 ),
                 reply_markup=InlineKeyboardMarkup(out),
                 supports_streaming=True,
+                has_spoiler=True,
             )
 
-        if await is_on_off(2):
-
-            return await app.send_message(
-                chat_id=config.LOG_GROUP_ID,
-                text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
-            )
+        return
 
 
 @app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
 @LanguageStart
 async def start_gp(client, message: Message, _):
+
+    try:
+        await message.react(
+            ReactionEmoji(
+                emoji="❤️"
+            ),
+            big=True
+        )
+    except:
+        pass
 
     out = start_panel(_)
 
@@ -246,7 +284,8 @@ async def start_gp(client, message: Message, _):
             ),
             reply_markup=InlineKeyboardMarkup(out),
             supports_streaming=True,
-            message_effect_id=5159385139981059251,
+            has_spoiler=True,
+            message_effect_id=EFFECT_ID,
         )
 
     except:
@@ -258,9 +297,12 @@ async def start_gp(client, message: Message, _):
             ),
             reply_markup=InlineKeyboardMarkup(out),
             supports_streaming=True,
+            has_spoiler=True,
         )
 
-    return await add_served_chat(message.chat.id)
+    return await add_served_chat(
+        message.chat.id
+    )
 
 
 @app.on_message(filters.new_chat_members, group=-1)
@@ -270,13 +312,18 @@ async def welcome(client, message: Message):
 
         try:
 
-            language = await get_lang(message.chat.id)
+            language = await get_lang(
+                message.chat.id
+            )
+
             _ = get_string(language)
 
             if await is_banned_user(member.id):
 
                 try:
-                    await message.chat.ban_member(member.id)
+                    await message.chat.ban_member(
+                        member.id
+                    )
                 except:
                     pass
 
@@ -284,9 +331,13 @@ async def welcome(client, message: Message):
 
                 if message.chat.type != ChatType.SUPERGROUP:
 
-                    await message.reply_text(_["start_4"])
+                    await message.reply_text(
+                        _["start_4"]
+                    )
 
-                    return await app.leave_chat(message.chat.id)
+                    return await app.leave_chat(
+                        message.chat.id
+                    )
 
                 if message.chat.id in await blacklisted_chats():
 
@@ -299,7 +350,9 @@ async def welcome(client, message: Message):
                         disable_web_page_preview=True,
                     )
 
-                    return await app.leave_chat(message.chat.id)
+                    return await app.leave_chat(
+                        message.chat.id
+                    )
 
                 out = start_panel(_)
 
@@ -314,7 +367,8 @@ async def welcome(client, message: Message):
                         ),
                         reply_markup=InlineKeyboardMarkup(out),
                         supports_streaming=True,
-                        message_effect_id=5159385139981059251,
+                        has_spoiler=True,
+                        message_effect_id=EFFECT_ID,
                     )
 
                 except:
@@ -328,9 +382,12 @@ async def welcome(client, message: Message):
                         ),
                         reply_markup=InlineKeyboardMarkup(out),
                         supports_streaming=True,
+                        has_spoiler=True,
                     )
 
-                await add_served_chat(message.chat.id)
+                await add_served_chat(
+                    message.chat.id
+                )
 
                 await message.stop_propagation()
 
