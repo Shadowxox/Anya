@@ -24,8 +24,10 @@ async def ping_com(client, message: Message, _):
         photo=PING_IMG_URL,
         caption=(
             "<b>╭━━〔 ⚡ ᴘɪɴɢ ꜱʏꜱᴛᴇᴍ 〕━━╮</b>\n\n"
-            "<blockquote>⌯ ᴛᴀᴘ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ\n"
-            "⌯ ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ & ꜱᴛᴀᴛᴜꜱ</blockquote>"
+            "<blockquote>"
+            "⌯ ᴛᴀᴘ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ\n"
+            "⌯ ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ & ꜱᴛᴀᴛᴜꜱ"
+            "</blockquote>"
         ),
         reply_markup=InlineKeyboardMarkup(
             [
@@ -57,7 +59,7 @@ async def ping_callback(client, query: CallbackQuery):
     for frame in loading:
         try:
             await query.answer(
-                f"⚡ ᴘɪɴɢɪɴɢ...\n{frame}",
+                text=f"⚡ ᴘɪɴɢɪɴɢ... {frame}",
                 show_alert=False
             )
             await asyncio.sleep(0.08)
@@ -71,15 +73,15 @@ async def ping_callback(client, query: CallbackQuery):
     resp = (datetime.now() - start).microseconds / 1000
 
     popup = (
-    f"⚡ ᴘɪɴɢ ᴘᴏɴɢ\n\n"
-    f"⌯ ᴘɪɴɢ : {resp:.3f} ms\n"
-    f"⌯ ᴘʏᴛɢᴄᴀʟʟs : {pytgping} ms\n"
-    f"⌯ ᴄᴘᴜ : {CPU}\n"
-    f"⌯ ʀᴀᴍ : {RAM}\n"
-    f"⌯ ᴅɪꜱᴋ : {DISK}"
-)
+        f"⚡ ᴘɪɴɢ ᴘᴏɴɢ\n\n"
+        f"⌯ ᴘɪɴɢ : {resp:.3f} ms\n"
+        f"⌯ ᴘʏᴛɢᴄᴀʟʟs : {pytgping} ms\n"
+        f"⌯ ᴄᴘᴜ : {CPU}\n"
+        f"⌯ ʀᴀᴍ : {RAM}\n"
+        f"⌯ ᴅɪꜱᴋ : {DISK}"
+    )
 
-await query.answer(
-    popup,
-    show_alert=True
-)
+    await query.answer(
+        text=popup[:190],
+        show_alert=True
+    )
