@@ -6,7 +6,6 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
-    ReactionEmoji,
 )
 
 from py_yt import VideosSearch
@@ -47,12 +46,7 @@ async def start_pm(client, message: Message, _):
     await add_served_user(message.from_user.id)
 
     try:
-        await message.react(
-            ReactionEmoji(
-                emoji="⚡"
-            ),
-            big=True
-        )
+        await message.react("⚡")
     except:
         pass
 
@@ -262,12 +256,7 @@ async def start_pm(client, message: Message, _):
 async def start_gp(client, message: Message, _):
 
     try:
-        await message.react(
-            ReactionEmoji(
-                emoji="❤️"
-            ),
-            big=True
-        )
+        await message.react("❤️")
     except:
         pass
 
