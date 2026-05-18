@@ -1,19 +1,35 @@
 from pyrogram import filters
-from pyrogram.types import Message
+from pyrogram.types import (
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    CallbackQuery,
+)
+
 from ShrutiMusic import app
+
 import requests
 import os
+import asyncio
+
+
+TEMP_VIDEOS = {}
+
 
 @app.on_message(filters.command("vid"))
 async def video_downloader(_, message: Message):
+
     if len(message.command) < 2:
-        return await message.reply_text("❌ Please provide a video URL.\n\nExample:\n/vid Any_video_url")
+        return await message.reply_text(
+            "❌ Please provide a video URL.\n\nExample:\n/vid link"
+        )
 
     video_url = message.text.split(None, 1)[1]
 
-    msg = await message.reply("🔍 Fetching video...")
+    msg = await message.reply_text(
+        "<b>🔍 ꜰᴇᴛᴄʜɪɴɢ ᴠɪᴅᴇᴏ ɪɴꜰᴏ...</b>"
+    )
 
-    # Step 1: Call API
     payload = {
         "url": video_url,
         "token": "c99f113fab0762d216b4545e5c3d615eefb30f0975fe107caab629d17e51b52d"
@@ -21,42 +37,152 @@ async def video_downloader(_, message: Message):
 
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Mozilla/5.0 (Linux; Android 14)",
+        "User-Agent": "Mozilla/5.0"
     }
 
     try:
-        r = requests.post("https://allvideodownloader.cc/wp-json/aio-dl/video-data/", data=payload, headers=headers)
+
+        r = requests.post(
+            "https://allvideodownloader.cc/wp-json/aio-dl/video-data/",
+            data=payload,
+            headers=headers
+        )
+
         data = r.json()
 
         if "medias" not in data or not data["medias"]:
-            return await msg.edit("❌ No downloadable video found.")
+            return await msg.edit_text(
+                "<b>❌ ɴᴏ ᴠɪᴅᴇᴏ ꜰᴏᴜɴᴅ.</b>"
+            )
 
-        # Step 2: Get best quality video URL
-        best_video = sorted(data["medias"], key=lambda x: x.get("quality", ""), reverse=True)[0]
+        best_video = sorted(
+            data["medias"],
+            key=lambda x: x.get("quality", ""),
+            reverse=True
+        )[0]
+
         video_link = best_video["url"]
 
-        # Step 3: Download the video to temp file
-        await msg.edit("⬇️ Downloading video...")
+        thumb = data.get("thumbnail")
 
-        file_name = "video.mp4"
-        with requests.get(video_link, stream=True) as v:
+        title = data.get("title", "Video")
+
+        TEMP_VIDEOS[message.from_user.id] = {
+            "url": video_link,
+            "title": title
+        }
+
+        await msg.delete()
+
+        await message.reply_photo(
+            photo=thumb,
+            caption=(
+                f"<b>╭━━〔 🎬 ᴠɪᴅᴇᴏ ꜰᴏᴜɴᴅ 〕━━╮</b>\n\n"
+                f"<blockquote>\n"
+                f"⌯ <b>ᴛɪᴛʟᴇ :</b> {title}\n"
+                f"⌯ <b>Qᴜᴀʟɪᴛʏ :</b> {best_video.get('quality', 'Unknown')}\n"
+                f"</blockquote>\n\n"
+                f"<b>⌯ ᴛᴀᴘ ʙᴇʟᴏᴡ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ</b>"
+            ),
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="⬇️ ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ",
+                            callback_data=f"download_video_{message.from_user.id}"
+                        )
+                    ]
+                ]
+            )
+        )
+
+    except Exception as e:
+
+        await msg.edit_text(
+            f"<b>❌ Error :</b>\n<code>{e}</code>"
+        )
+
+
+@app.on_callback_query(filters.regex("^download_video_"))
+async def download_video_callback(client, query: CallbackQuery):
+
+    user_id = int(query.data.split("_")[-1])
+
+    if query.from_user.id != user_id:
+        return await query.answer(
+            "❌ ᴛʜɪꜱ ɪꜱ ɴᴏᴛ ʏᴏᴜʀ ᴠɪᴅᴇᴏ.",
+            show_alert=True
+        )
+
+    if user_id not in TEMP_VIDEOS:
+        return await query.answer(
+            "❌ ᴠɪᴅᴇᴏ ᴇxᴘɪʀᴇᴅ.",
+            show_alert=True
+        )
+
+    data = TEMP_VIDEOS[user_id]
+
+    video_url = data["url"]
+
+    title = data["title"]
+
+    loading = [
+        "▱▱▱▱▱",
+        "▰▱▱▱▱",
+        "▰▰▱▱▱",
+        "▰▰▰▱▱",
+        "▰▰▰▰▱",
+        "▰▰▰▰▰",
+    ]
+
+    for frame in loading:
+        try:
+            await query.answer(
+                f"⬇️ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ...\n{frame}",
+                show_alert=False
+            )
+            await asyncio.sleep(0.08)
+        except:
+            pass
+
+    file_name = f"{user_id}.mp4"
+
+    try:
+
+        await query.edit_message_caption(
+            caption="<b>⬇️ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ...</b>"
+        )
+
+        with requests.get(video_url, stream=True) as v:
+
             with open(file_name, "wb") as f:
+
                 for chunk in v.iter_content(chunk_size=8192):
                     f.write(chunk)
 
-        # Step 4: Send video to user
+        await query.message.delete()
+
         await app.send_video(
-            chat_id=message.chat.id,
+            chat_id=query.message.chat.id,
             video=file_name,
-            caption=f"🎬 {data.get('title', 'Video')}\n\n✅ ",
+            caption=(
+                f"<b>╭━━〔 🎬 ᴅᴏᴡɴʟᴏᴀᴅᴇᴅ 〕━━╮</b>\n\n"
+                f"<blockquote>\n"
+                f"⌯ <b>{title}</b>\n"
+                f"</blockquote>"
+            ),
             supports_streaming=True
         )
 
-        await msg.delete()
         os.remove(file_name)
 
+        del TEMP_VIDEOS[user_id]
+
     except Exception as e:
-        await msg.edit(f"❌ Error: {str(e)}")
+
+        await query.message.reply_text(
+            f"<b>❌ Error :</b>\n<code>{e}</code>"
+        )
 
 
 
