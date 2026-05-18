@@ -1,62 +1,90 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
-
 from datetime import datetime
+import asyncio
 
 from pyrogram import filters
-from pyrogram.types import Message
+from pyrogram.types import (
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    CallbackQuery,
+)
 
 from ShrutiMusic import app
 from ShrutiMusic.core.call import Nand
 from ShrutiMusic.utils import bot_sys_stats
 from ShrutiMusic.utils.decorators.language import language
-from ShrutiMusic.utils.inline import supp_markup
 from config import BANNED_USERS, PING_IMG_URL
 
 
 @app.on_message(filters.command(["ping", "alive"]) & ~BANNED_USERS)
 @language
 async def ping_com(client, message: Message, _):
-    start = datetime.now()
-    response = await message.reply_photo(
+
+    await message.reply_photo(
         photo=PING_IMG_URL,
-        caption=_["ping_1"].format(app.mention),
+        caption=(
+            "<b>╭━━〔 ⚡ ᴘɪɴɢ ꜱʏꜱᴛᴇᴍ 〕━━╮</b>\n\n"
+            "<blockquote>⌯ ᴛᴀᴘ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ\n"
+            "⌯ ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ & ꜱᴛᴀᴛᴜꜱ</blockquote>"
+        ),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="⚡ ᴄʜᴇᴄᴋ ᴘɪɴɢ",
+                        callback_data="check_ping"
+                    )
+                ]
+            ]
+        )
     )
+
+
+@app.on_callback_query(filters.regex("^check_ping$"))
+async def ping_callback(client, query: CallbackQuery):
+
+    start = datetime.now()
+
+    loading = [
+        "▱▱▱▱▱",
+        "▰▱▱▱▱",
+        "▰▰▱▱▱",
+        "▰▰▰▱▱",
+        "▰▰▰▰▱",
+        "▰▰▰▰▰",
+    ]
+
+    for frame in loading:
+        try:
+            await query.answer(
+                f"⚡ ᴘɪɴɢɪɴɢ...\n{frame}",
+                show_alert=False
+            )
+            await asyncio.sleep(0.08)
+        except:
+            pass
+
     pytgping = await Nand.ping()
+
     UP, CPU, RAM, DISK = await bot_sys_stats()
+
     resp = (datetime.now() - start).microseconds / 1000
-    await response.edit_text(
-        _["ping_2"].format(resp, app.mention, UP, RAM, CPU, DISK, pytgping),
-        reply_markup=supp_markup(_),
+
+    popup = (
+        f"💌 ᴘɪɴɢ ᴘᴏɴɢ ʙᴀʙʏ...\n\n"
+        f"• ᴅᴀᴛᴀʙᴀsᴇ : ᴏɴʟɪɴᴇ\n"
+        f"• ʏᴏᴜᴛᴜʙᴇ ᴀᴘɪ : ʀᴇsᴘᴏɴsɪᴠᴇ\n"
+        f"• ʙᴏᴛ ꜱᴛᴀᴛᴜꜱ : ʀᴜɴɴɪɴɢ\n"
+        f"• ʀᴇꜱᴘᴏɴꜱᴇ : ꜱᴍᴏᴏᴛʜ\n"
+        f"• ᴘɪɴɢ : {resp:.3f} ms\n"
+        f"• ᴘʏᴛɢᴄᴀʟʟꜱ : {pytgping} ms\n\n"
+        f"• ᴜᴘᴛɪᴍᴇ : {UP}\n"
+        f"• ʀᴀᴍ : {RAM}\n"
+        f"• ᴄᴘᴜ : {CPU}\n"
+        f"• ᴅɪꜱᴋ : {DISK}"
     )
 
-
-# ©️ Copyright Reserved - @NoxxOP  Nand Yaduwanshi
-
-# ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @NoxxOP)
-# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
-# 📢 Telegram Channel : https://t.me/ShrutiBots
-# ===========================================
-
-
-# ❤️ Love From ShrutiBots 
+    await query.answer(
+        popup,
+        show_alert=True
+    )
