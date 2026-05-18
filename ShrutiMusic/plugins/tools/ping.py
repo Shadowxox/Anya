@@ -26,7 +26,7 @@ async def ping_com(client, message: Message, _):
             "<b>╭━━〔 ⚡ ᴘɪɴɢ ꜱʏꜱᴛᴇᴍ 〕━━╮</b>\n\n"
             "<blockquote>"
             "⌯ ᴛᴀᴘ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ\n"
-            "⌯ ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ & ꜱᴛᴀᴛᴜꜱ"
+            "⌯ ᴛᴏ ᴄʜᴇᴄᴋ ʙᴏᴛ ᴘɪɴɢ"
             "</blockquote>"
         ),
         reply_markup=InlineKeyboardMarkup(
@@ -47,7 +47,7 @@ async def ping_callback(client, query: CallbackQuery):
 
     start = datetime.now()
 
-    loading = [
+    loading_frames = [
         "▱▱▱▱▱",
         "▰▱▱▱▱",
         "▰▰▱▱▱",
@@ -56,15 +56,34 @@ async def ping_callback(client, query: CallbackQuery):
         "▰▰▰▰▰",
     ]
 
-    for frame in loading:
-        try:
-            await query.answer(
-                text=f"⚡ ᴘɪɴɢɪɴɢ... {frame}",
-                show_alert=False
+    try:
+
+        for frame in loading_frames:
+
+            await query.message.edit_caption(
+                caption=(
+                    "<b>╭━━〔 ⚡ ᴘɪɴɢɪɴɢ 〕━━╮</b>\n\n"
+                    f"<blockquote>\n"
+                    f"⌯ {frame}\n"
+                    f"⌯ ᴄʜᴇᴄᴋɪɴɢ ʙᴏᴛ ꜱᴘᴇᴇᴅ...\n"
+                    f"</blockquote>"
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="⚡ ᴘɪɴɢɪɴɢ...",
+                                callback_data="nothing"
+                            )
+                        ]
+                    ]
+                )
             )
+
             await asyncio.sleep(0.08)
-        except:
-            pass
+
+    except:
+        pass
 
     pytgping = await Nand.ping()
 
@@ -74,14 +93,36 @@ async def ping_callback(client, query: CallbackQuery):
 
     popup = (
         f"⚡ ᴘɪɴɢ ᴘᴏɴɢ\n\n"
-        f"⌯ ᴘɪɴɢ : {resp:.3f} ms\n"
-        f"⌯ ᴘʏᴛɢᴄᴀʟʟs : {pytgping} ms\n"
-        f"⌯ ᴄᴘᴜ : {CPU}\n"
-        f"⌯ ʀᴀᴍ : {RAM}\n"
-        f"⌯ ᴅɪꜱᴋ : {DISK}"
+        f"⌯ ᴘɪɴɢ : {resp:.2f} ms\n"
+        f"⌯ ᴘʏᴛɢᴄᴀʟʟs : {pytgping} ms"
     )
 
     await query.answer(
-        text=popup[:190],
+        text=popup,
         show_alert=True
     )
+
+    await query.message.edit_caption(
+        caption=(
+            "<b>╭━━〔 ✅ ᴘɪɴɢ ᴄᴏᴍᴘʟᴇᴛᴇ 〕━━╮</b>\n\n"
+            "<blockquote>"
+            "⌯ ᴘɪɴɢ ᴄʜᴇᴄᴋ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟ\n"
+            "⌯ ᴛᴀᴘ ʙᴇʟᴏᴡ ᴛᴏ ᴄʜᴇᴄᴋ ᴀɢᴀɪɴ"
+            "</blockquote>"
+        ),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="⚡ ᴄʜᴇᴄᴋ ᴀɢᴀɪɴ",
+                        callback_data="check_ping"
+                    )
+                ]
+            ]
+        )
+    )
+
+
+@app.on_callback_query(filters.regex("^nothing$"))
+async def nothing_callback(client, query: CallbackQuery):
+    await query.answer()
