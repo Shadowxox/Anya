@@ -71,20 +71,15 @@ async def ping_callback(client, query: CallbackQuery):
     resp = (datetime.now() - start).microseconds / 1000
 
     popup = (
-        f"💌 ᴘɪɴɢ ᴘᴏɴɢ ʙᴀʙʏ...\n\n"
-        f"• ᴅᴀᴛᴀʙᴀsᴇ : ᴏɴʟɪɴᴇ\n"
-        f"• ʏᴏᴜᴛᴜʙᴇ ᴀᴘɪ : ʀᴇsᴘᴏɴsɪᴠᴇ\n"
-        f"• ʙᴏᴛ ꜱᴛᴀᴛᴜꜱ : ʀᴜɴɴɪɴɢ\n"
-        f"• ʀᴇꜱᴘᴏɴꜱᴇ : ꜱᴍᴏᴏᴛʜ\n"
-        f"• ᴘɪɴɢ : {resp:.3f} ms\n"
-        f"• ᴘʏᴛɢᴄᴀʟʟꜱ : {pytgping} ms\n\n"
-        f"• ᴜᴘᴛɪᴍᴇ : {UP}\n"
-        f"• ʀᴀᴍ : {RAM}\n"
-        f"• ᴄᴘᴜ : {CPU}\n"
-        f"• ᴅɪꜱᴋ : {DISK}"
-    )
+    f"⚡ ᴘɪɴɢ ᴘᴏɴɢ\n\n"
+    f"⌯ ᴘɪɴɢ : {resp:.3f} ms\n"
+    f"⌯ ᴘʏᴛɢᴄᴀʟʟs : {pytgping} ms\n"
+    f"⌯ ᴄᴘᴜ : {CPU}\n"
+    f"⌯ ʀᴀᴍ : {RAM}\n"
+    f"⌯ ᴅɪꜱᴋ : {DISK}"
+)
 
-    await query.answer(
-        popup,
-        show_alert=True
-    )
+await query.answer(
+    popup,
+    show_alert=True
+)
