@@ -8,7 +8,8 @@ def start_panel(_):
         [
             InlineKeyboardButton(
                 text=_["S_B_1"],
-                url=f"https://t.me/{app.username}?startgroup=true"
+                url=f"https://t.me{app.username}?startgroup=true",
+                style="positive"  # <-- Isse ye button GREEN dikhega
             )
         ],
         [
@@ -18,7 +19,8 @@ def start_panel(_):
             ),
             InlineKeyboardButton(
                 text=_["S_B_5"],
-                user_id=config.OWNER_ID
+                user_id=config.OWNER_ID,
+                style="primary"   # <-- Default Blue/Theme colour
             ),
         ],
         [
@@ -36,7 +38,8 @@ def private_panel(_):
         [
             InlineKeyboardButton(
                 text=_["S_B_3"],
-                url=f"https://t.me/{app.username}?startgroup=true",
+                url=f"https://t.me{app.username}?startgroup=true",
+                style="positive"  # <-- GREEN Colour
             )
         ],
         [
@@ -74,11 +77,13 @@ def about_panel(_):
         [
             InlineKeyboardButton(
                 text=_["BACK_BUTTON"],
-                callback_data="settingsback_helper"
+                callback_data="settingsback_helper",
+                style="destructive"  # <-- Isse Back button RED dikhega
             ),
             InlineKeyboardButton(
                 text="➕ Add Me",
-                url=f"https://t.me/{app.username}?startgroup=true"
+                url=f"https://t.me{app.username}?startgroup=true",
+                style="positive"     # <-- GREEN Colour
             ),
         ]
     ]
