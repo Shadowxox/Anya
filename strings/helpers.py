@@ -1,24 +1,3 @@
-# Copyright (c) 2025 Nand Yaduwanshi <NoxxOP>
-# Location: Supaul, Bihar
-#
-# All rights reserved.
-#
-# This code is the intellectual property of Nand Yaduwanshi.
-# You are not allowed to copy, modify, redistribute, or use this
-# code for commercial or personal projects without explicit permission.
-#
-# Allowed:
-# - Forking for personal learning
-# - Submitting improvements via pull requests
-#
-# Not Allowed:
-# - Claiming this code as your own
-# - Re-uploading without credit or permission
-# - Selling or using commercially
-#
-# Contact for permissions:
-# Email: badboy809075@gmail.com
-
 
 HELP_1 = """<b><u>ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs :</b></u>
 
@@ -440,13 +419,34 @@ HELP_39 = """🎤 <b>VC LOGGER</b> 📢
 - <b>ᴡᴏʀᴋꜱ ᴡɪᴛʜ ᴀʟʟ ᴘʀᴇꜰɪxᴇꜱ (., !, /, @, ?, ')</b> 🔧
 """
 
-# ©️ Copyright Reserved - @NoxxOP  Nand Yaduwanshi
+HELP_40 = """
+<b>╭━━〔 🔇 ɢᴍᴜᴛᴇ ᴄᴏᴍᴍᴀɴᴅꜱ 〕━━╮</b>
 
-# ===========================================
-# ©️ 2025 Nand Yaduwanshi (aka @NoxxOP)
-# 🔗 GitHub : https://github.com/NoxxOP/ShrutiMusic
-# 📢 Telegram Channel : https://t.me/ShrutiBots
-# ===========================================
+<blockquote>
+⌯ <b>/gmute</b>  
+ɢʟᴏʙᴀʟʟʏ ᴍᴜᴛᴇ ᴀ ᴜꜱᴇʀ.
 
+⌯ <b>/gunmute</b>  
+ʀᴇᴍᴏᴠᴇ ɢʟᴏʙᴀʟ ᴍᴜᴛᴇ.
 
-# ❤️ Love From ShrutiBots 
+⌯ <b>/gmuted</b>  
+ꜱʜᴏᴡ ᴀʟʟ ɢᴍᴜᴛᴇᴅ ᴜꜱᴇʀꜱ.
+
+⌯ <b>/gmuteusers</b>  
+ᴀɴᴏᴛʜᴇʀ ᴄᴏᴍᴍᴀɴᴅ
+ᴛᴏ ᴠɪᴇᴡ ɢᴍᴜᴛᴇᴅ ᴜꜱᴇʀꜱ.
+</blockquote>
+
+<b>⌯ ɴᴏᴛᴇ :</b>
+
+<blockquote>
+• ɢᴍᴜᴛᴇᴅ ᴜꜱᴇʀꜱ ᴍᴇꜱꜱᴀɢᴇꜱ
+  ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ
+  ɢʟᴏʙᴀʟʟʏ.
+
+• ꜱᴜᴅᴏᴇʀꜱ ᴄᴀɴɴᴏᴛ
+  ʙᴇ ɢᴍᴜᴛᴇᴅ.
+</blockquote>
+
+<b>╰━━〔 ⚡ ɢʟᴏʙᴀʟ ᴍᴏᴅᴇʀᴀᴛɪᴏɴ 〕━━╯</b>
+"""
