@@ -3,15 +3,13 @@ from pyrogram.types import Message
 
 from ShrutiMusic import app
 
-import requests
+import http.client
+import json
 import os
 import uuid
-import asyncio
 
 
-API_URL = "https://allvideodownloader.cc/wp-json/aio-dl/video-data/"
-
-TOKEN = "c99f113fab0762d216b4545e5c3d615eefb30f0975fe107caab629d17e51b52d"
+API_TOKEN = "255|jPEBmEeCxHz3hV63Z680uq5nEUDOYKfNLxtFmuGV"
 
 
 @app.on_message(filters.command(["vid", "ig", "pin"]))
@@ -31,40 +29,43 @@ async def universal_downloader(_, message: Message):
         "<b>🔍 ꜰᴇᴛᴄʜɪɴɢ ᴍᴇᴅɪᴀ...</b>"
     )
 
-    payload = {
-        "url": url,
-        "token": TOKEN
-    }
-
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Mozilla/5.0"
-    }
-
     try:
 
-        r = requests.post(
-            API_URL,
-            data=payload,
-            headers=headers
-        )
+        conn = http.client.HTTPSConnection("flashapi.ru")
 
-        data = r.json()
+        headers = {
+            "Authorization": f"Bearer {API_TOKEN}"
+        }
 
-        medias = data.get("medias")
+        endpoint = f"/api/download?url={url}"
 
-        if not medias:
+        conn.request("GET", endpoint, headers=headers)
+
+        res = conn.getresponse()
+
+        data = res.read().decode("utf-8")
+
+        response = json.loads(data)
+
+        if not response.get("status"):
+
+            return await msg.edit_text(
+                "<b>❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ꜰᴇᴛᴄʜ ᴍᴇᴅɪᴀ.</b>"
+            )
+
+        media = response.get("result")
+
+        if not media:
+
             return await msg.edit_text(
                 "<b>❌ ɴᴏ ᴍᴇᴅɪᴀ ꜰᴏᴜɴᴅ.</b>"
             )
 
-        best_media = medias[0]
+        media_url = media.get("url")
 
-        media_url = best_media.get("url")
+        title = media.get("title", "Media")
 
-        ext = best_media.get("extension", "mp4").lower()
-
-        title = data.get("title", "Media")
+        ext = media_url.split(".")[-1].split("?")[0].lower()
 
         file_name = f"{uuid.uuid4()}.{ext}"
 
@@ -72,32 +73,22 @@ async def universal_downloader(_, message: Message):
             "<b>⬇️ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ...</b>"
         )
 
-        with requests.get(media_url, stream=True) as response:
+        import requests
 
-            if response.status_code != 200:
-                return await msg.edit_text(
-                    "<b>❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.</b>"
-                )
+        r = requests.get(media_url, stream=True)
 
-            with open(file_name, "wb") as f:
-
-                for chunk in response.iter_content(chunk_size=8192):
-
-                    if chunk:
-                        f.write(chunk)
-
-        if not os.path.exists(file_name):
-            return await msg.edit_text(
-                "<b>❌ ꜰɪʟᴇ ɴᴏᴛ ꜰᴏᴜɴᴅ.</b>"
-            )
-
-        if os.path.getsize(file_name) == 0:
-
-            os.remove(file_name)
+        if r.status_code != 200:
 
             return await msg.edit_text(
-                "<b>❌ ᴇᴍᴘᴛʏ ꜰɪʟᴇ.</b>"
+                "<b>❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ.</b>"
             )
+
+        with open(file_name, "wb") as f:
+
+            for chunk in r.iter_content(chunk_size=8192):
+
+                if chunk:
+                    f.write(chunk)
 
         await msg.delete()
 
