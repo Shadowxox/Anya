@@ -2583,7 +2583,7 @@ async def style(c, m):
     # Apply the selected style to the text
     new_text = cls(text_to_style)
     try:
-        await m.message.edit_text(f"`{new_text}`")
+        await m.message.edit_text(f"<code>{new_text}</code>")
     except BaseException:
         pass
 
