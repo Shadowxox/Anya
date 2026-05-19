@@ -87,7 +87,7 @@ async def effect_command(_, message: Message):
 # Lyrics Command
 # =========================
 
-@app.on_message(filters.command("ly") & ~BANNED_USERS)
+@app.on_message(filters.command(["lyrics", "ly"]) & ~BANNED_USERS)
 async def lyrics_command(_, message: Message):
 
     if len(message.command) < 2:
