@@ -5,7 +5,7 @@ from ShrutiMusic import app
 
 def start_panel(_):
     # 1. Pehle normal buttons banayein
-    btn1 = InlineKeyboardButton(text=_["S_B_1"], url=f"https://t.me{app.username}?startgroup=true")
+    btn1 = InlineKeyboardButton(text=_["S_B_1"], url=f"https://t.me/{app.username}?startgroup=true")
     btn2 = InlineKeyboardButton(text=_["S_B_11"], callback_data="about_page")
     btn3 = InlineKeyboardButton(text=_["S_B_5"], user_id=config.OWNER_ID)
     btn4 = InlineKeyboardButton(text=_["S_B_4"], callback_data="help_page_1")
@@ -19,7 +19,7 @@ def start_panel(_):
 
 
 def private_panel(_):
-    btn1 = InlineKeyboardButton(text=_["S_B_3"], url=f"https://t.me{app.username}?startgroup=true")
+    btn1 = InlineKeyboardButton(text=_["S_B_3"], url=f"https://t.me/{app.username}?startgroup=true")
     btn2 = InlineKeyboardButton(text=_["S_B_11"], callback_data="about_page")
     btn3 = InlineKeyboardButton(text=_["S_B_5"], user_id=config.OWNER_ID)
     btn4 = InlineKeyboardButton(text=_["S_B_4"], callback_data="help_page_1")
