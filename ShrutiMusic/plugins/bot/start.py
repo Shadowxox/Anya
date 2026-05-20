@@ -1,4 +1,5 @@
 import time
+import config
 
 from pyrogram import filters
 from pyrogram.enums import ChatType
@@ -10,7 +11,6 @@ from pyrogram.types import (
 
 from py_yt import VideosSearch
 
-import config
 from ShrutiMusic import app
 from ShrutiMusic.misc import _boot_
 from ShrutiMusic.plugins.sudo.sudoers import sudoers_list
@@ -31,14 +31,13 @@ from ShrutiMusic.utils.inline import (
     private_panel,
     start_panel,
 )
-
 from config import BANNED_USERS
 from strings import get_string
-
 
 EFFECT_ID = 5104841245755180586
 
 
+# ---------------- PRIVATE START ---------------- #
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
@@ -50,53 +49,60 @@ async def start_pm(client, message: Message, _):
     except:
         pass
 
-    user = message.from_user  # ✅ for logging
+    try:
+        user = message.from_user
+        username = f"@{user.username}" if user.username else "Not Set"
 
-    # ---------------- HELP ----------------
+        log_text = f"""
+🎧 <b>𝙉𝙀𝙒 𝙎𝙏𝘼𝙍𝙏 𝙀𝙑𝙀𝙉𝙏</b>
+
+✨ <b>User:</b> {user.mention}
+🪪 <b>Name:</b> {user.first_name}
+👤 <b>Username:</b> {username}
+🆔 <b>User ID:</b> <code>{user.id}</code>
+
+🎶 <b>Bot:</b> {app.mention}
+💫 <b>Action:</b> Started the bot in DM
+"""
+
+        await app.send_message(
+            chat_id=config.LOG_GROUP_ID,
+            text=log_text,
+            disable_web_page_preview=True
+        )
+
+    except Exception as e:
+        print(f"LOG ERROR: {e}")
+
     if len(message.text.split()) > 1:
 
         name = message.text.split(None, 1)[1]
 
         if name[0:4] == "help":
-
             keyboard = help_pannel_page1(_)
 
-            try:
-                return await message.reply_video(
-                    video=config.START_IMG_URL,
-                    caption=_["help_1"].format(config.SUPPORT_GROUP),
-                    reply_markup=keyboard,
-                    supports_streaming=True,
-                    has_spoiler=True,
-                    message_effect_id=EFFECT_ID,
-                )
-            except:
-                return await message.reply_video(
-                    video=config.START_IMG_URL,
-                    caption=_["help_1"].format(config.SUPPORT_GROUP),
-                    reply_markup=keyboard,
-                    supports_streaming=True,
-                    has_spoiler=True,
-                )
+            return await message.reply_video(
+                video=config.START_IMG_URL,
+                caption=_["help_1"].format(config.SUPPORT_GROUP),
+                reply_markup=keyboard,
+                supports_streaming=True,
+                has_spoiler=True,
+            )
 
-        # ---------------- SUDO ----------------
         if name[0:3] == "sud":
-
             await sudoers_list(client=client, message=message, _=_)
 
             if await is_on_off(2):
                 return await app.send_message(
                     chat_id=config.LOG_GROUP_ID,
-                    text=f"{message.from_user.mention} started the bot to check sudo list.",
+                    text=f"{message.from_user.mention} checked sudo list.",
                 )
             return
 
-        # ---------------- INFO ----------------
         if name[0:3] == "inf":
-
             m = await message.reply_text("🔎")
 
-            query = (str(name)).replace("info_", "", 1)
+            query = str(name).replace("info_", "", 1)
             query = f"https://www.youtube.com/watch?v={query}"
 
             results = VideosSearch(query, limit=1)
@@ -123,43 +129,28 @@ async def start_pm(client, message: Message, _):
             key = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(text=_["S_B_8"], url=link),
-                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_GROUP),
+                        InlineKeyboardButton("▶️ Watch", url=link),
+                        InlineKeyboardButton("SUPPORT", url=config.SUPPORT_GROUP),
                     ],
                 ]
             )
 
             await m.delete()
 
-            try:
-                await app.send_video(
-                    chat_id=message.chat.id,
-                    video=config.START_IMG_URL,
-                    caption=searched_text,
-                    reply_markup=key,
-                    supports_streaming=True,
-                    has_spoiler=True,
-                    message_effect_id=EFFECT_ID,
-                )
-            except:
-                await app.send_video(
-                    chat_id=message.chat.id,
-                    video=config.START_IMG_URL,
-                    caption=searched_text,
-                    reply_markup=key,
-                    supports_streaming=True,
-                    has_spoiler=True,
-                )
+            return await app.send_video(
+                chat_id=message.chat.id,
+                video=config.START_IMG_URL,
+                caption=searched_text,
+                reply_markup=key,
+                supports_streaming=True,
+                has_spoiler=True,
+            )
 
-            return
-
-        # ---------------- START CMD ----------------
         if name == "start":
-
             out = private_panel(_)
             UP, CPU, RAM, DISK = await bot_sys_stats()
 
-            msg = await message.reply_video(
+            return await message.reply_video(
                 video=config.START_IMG_URL,
                 caption=_["start_2"].format(
                     message.from_user.mention,
@@ -172,15 +163,13 @@ async def start_pm(client, message: Message, _):
                 reply_markup=InlineKeyboardMarkup(out),
                 supports_streaming=True,
                 has_spoiler=True,
-                message_effect_id=EFFECT_ID,
             )
 
     else:
-
         out = private_panel(_)
         UP, CPU, RAM, DISK = await bot_sys_stats()
 
-        msg = await message.reply_video(
+        return await message.reply_video(
             video=config.START_IMG_URL,
             caption=_["start_2"].format(
                 message.from_user.mention,
@@ -193,36 +182,10 @@ async def start_pm(client, message: Message, _):
             reply_markup=InlineKeyboardMarkup(out),
             supports_streaming=True,
             has_spoiler=True,
-            message_effect_id=EFFECT_ID,
         )
 
-    # ---------------- LOG START EVENT (FIXED) ----------------
-    try:
-        username = f"@{user.username}" if user.username else "Not Set"
 
-        log_text = f"""
-<blockquote>🎧 𝙉𝙀𝙒 𝙎𝙏𝘼𝙍𝙏 𝙀𝙑𝙀𝙉𝙏</blockquote>
-
-<blockquote>✨ User: {user.mention}</blockquote>
-<blockquote>🪪 Name: {user.first_name}</blockquote>
-<blockquote>👤 Username: {username}</blockquote>
-<blockquote>🆔 User ID: {user.id}</blockquote>
-
-<blockquote>🎶 Bot: {app.mention}</blockquote>
-<blockquote>💫 Action: Started bot in DM</blockquote>
-"""
-
-        await app.send_message(
-            chat_id=config.LOG_GROUP_ID,
-            text=log_text,
-            disable_web_page_preview=True,
-        )
-
-    except Exception as e:
-        print(f"LOG ERROR: {e}")
-
-
-# ---------------- GROUP START ----------------
+# ---------------- GROUP START ---------------- #
 @app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
 @LanguageStart
 async def start_gp(client, message: Message, _):
@@ -233,37 +196,21 @@ async def start_gp(client, message: Message, _):
         pass
 
     out = start_panel(_)
-
     uptime = int(time.time() - _boot_)
 
-    try:
-        await message.reply_video(
-            video=config.START_IMG_URL,
-            caption=_["start_1"].format(
-                app.mention,
-                get_readable_time(uptime)
-            ),
-            reply_markup=InlineKeyboardMarkup(out),
-            supports_streaming=True,
-            has_spoiler=True,
-            message_effect_id=EFFECT_ID,
-        )
-    except:
-        await message.reply_video(
-            video=config.START_IMG_URL,
-            caption=_["start_1"].format(
-                app.mention,
-                get_readable_time(uptime)
-            ),
-            reply_markup=InlineKeyboardMarkup(out),
-            supports_streaming=True,
-            has_spoiler=True,
-        )
-
-    return await add_served_chat(message.chat.id)
+    return await message.reply_video(
+        video=config.START_IMG_URL,
+        caption=_["start_1"].format(
+            app.mention,
+            get_readable_time(uptime),
+        ),
+        reply_markup=InlineKeyboardMarkup(out),
+        supports_streaming=True,
+        has_spoiler=True,
+    )
 
 
-# ---------------- BOT ADDED IN GROUP ----------------
+# ---------------- NEW CHAT MEMBERS ---------------- #
 @app.on_message(filters.new_chat_members, group=-1)
 async def welcome(client, message: Message):
 
@@ -298,36 +245,34 @@ async def welcome(client, message: Message):
 
                 out = start_panel(_)
 
-                try:
-                    await message.reply_video(
-                        video=config.START_IMG_URL,
-                        caption=_["start_3"].format(
-                            message.from_user.first_name,
-                            app.mention,
-                            message.chat.title,
-                            app.mention,
-                        ),
-                        reply_markup=InlineKeyboardMarkup(out),
-                        supports_streaming=True,
-                        has_spoiler=True,
-                        message_effect_id=EFFECT_ID,
-                    )
-                except:
-                    await message.reply_video(
-                        video=config.START_IMG_URL,
-                        caption=_["start_3"].format(
-                            message.from_user.first_name,
-                            app.mention,
-                            message.chat.title,
-                            app.mention,
-                        ),
-                        reply_markup=InlineKeyboardMarkup(out),
-                        supports_streaming=True,
-                        has_spoiler=True,
-                    )
+                return await message.reply_video(
+                    video=config.START_IMG_URL,
+                    caption=_["start_3"].format(
+                        message.from_user.first_name,
+                        app.mention,
+                        message.chat.title,
+                        app.mention,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(out),
+                    supports_streaming=True,
+                    has_spoiler=True,
+                )
 
-                await add_served_chat(message.chat.id)
-                await message.stop_propagation()
+            # NORMAL USER WELCOME ONLY (NO OWNER SPECIAL)
+            out = start_panel(_)
+
+            return await message.reply_video(
+                video=config.START_IMG_URL,
+                caption=_["start_3"].format(
+                    member.first_name,
+                    app.mention,
+                    message.chat.title,
+                    app.mention,
+                ),
+                reply_markup=InlineKeyboardMarkup(out),
+                supports_streaming=True,
+                has_spoiler=True,
+            )
 
         except Exception as ex:
             print(ex)
