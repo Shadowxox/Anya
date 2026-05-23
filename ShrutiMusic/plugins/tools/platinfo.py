@@ -10,9 +10,6 @@ from ShrutiMusic import app
 
 OWNER_ID = 8982722712
 
-# ─────────────────────────────
-# Detect Hosting Platform
-# ─────────────────────────────
 
 def detect_platform():
     env = os.environ
@@ -38,10 +35,6 @@ def detect_platform():
 
     return "Unknown VPS / Localhost"
 
-# ─────────────────────────────
-# Public IP
-# ─────────────────────────────
-
 def get_public_ip():
     try:
         return requests.get(
@@ -51,9 +44,6 @@ def get_public_ip():
     except:
         return "Unknown"
 
-# ─────────────────────────────
-# System Info
-# ─────────────────────────────
 
 def get_system_info():
     ram = psutil.virtual_memory()
@@ -80,9 +70,6 @@ def get_system_info():
 """
     return text
 
-# ─────────────────────────────
-# HostInfo Command
-# ─────────────────────────────
 
 @app.on_message(filters.command("hostinfo"))
 async def hostinfo_command(_, message: Message):
